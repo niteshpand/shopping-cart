@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { CartState } from "../Context/Context";
 import { ListGroup } from "react-bootstrap";
-import { Button } from "react-bootstrap";
+import { Button, Row, Col, Form, Image } from "react-bootstrap";
+import { Rating } from "./Rating";
+import { type } from "@testing-library/user-event/dist/type";
+import { AiFillDelete } from "react-icons/ai";
 
 export const Cart = () => {
   const {
@@ -21,7 +24,41 @@ export const Cart = () => {
       <div className="productContainer">
         <ListGroup>
           {cart.map((prod) => (
-            <span>{prod.name}</span>
+            <ListGroup.Item key={prod.id}>
+              <Row>
+                <Col md={2}>
+                  <Image src={prod.image} alt={prod.name} fluid rounded />
+                </Col>
+                <Col md={2}>
+                  <span>{prod.name}</span>
+                </Col>
+                <Col md={2}>₹ {prod.price}</Col>
+                <Col md={2}>
+                  <Rating rating={prod.ratings} />
+                </Col>
+                <Col md={2}>
+                  <Form.Control as="select" value={prod.qty}>
+                    {[...Array(prod.inStock).keys()].map((x) => (
+                      <option key={x + 1}>{x + 1}</option>
+                    ))}
+                  </Form.Control>
+                </Col>
+                <Col md={2}>
+                  <Button
+                    type="button"
+                    variant="light"
+                    onClick={() =>
+                      dispatch({
+                        type: "REMOVE_FROM_CART",
+                        payload: prod,
+                      })
+                    }
+                  >
+                    <AiFillDelete fontSize="20px" />
+                  </Button>
+                </Col>
+              </Row>
+            </ListGroup.Item>
           ))}
         </ListGroup>
       </div>
